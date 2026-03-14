@@ -1,0 +1,71 @@
+{{- if .Values.elasticsearch.enabled }}
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: {{ .Values.elasticsearch.name }}
+  namespace: {{ .Values.elasticsearch.namespace }}
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    argocd.argoproj.io/sync-options: Prune=false
+spec:
+  version: {{ .Values.elasticsearch.version }}
+  {{- if .Values.elasticsearch.imagePullSecrets }}
+  imagePullSecrets:
+    {{- toYaml .Values.elasticsearch.imagePullSecrets | nindent 4 }}
+  {{- end }}
+  {{- if .Values.elasticsearch.image }}
+  image: {{ .Values.elasticsearch.image }}
+  {{- end }}
+  {{- if .Values.elasticsearch.http }}
+  http:
+    {{- toYaml .Values.elasticsearch.http | nindent 4 }}
+  {{- end }}
+  nodeSets:
+    {{- range .Values.elasticsearch.nodeSets }}
+    - name: {{ .name }}
+      count: {{ .count }}
+      {{- if .config }}
+      config:
+        {{- toYaml .config | nindent 8 }}
+      {{- end }}
+      podTemplate:
+        spec:
+          serviceAccountName: {{ $.Values.global.serviceAccountName | default "default" }}
+          {{- if .nodeSelector }}
+          nodeSelector:
+            {{- toYaml .nodeSelector | nindent 12 }}
+          {{- end }}
+          {{- if .tolerations }}
+          tolerations:
+            {{- toYaml .tolerations | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: elasticsearch
+              resources:
+                {{- toYaml .resources | nindent 16 }}
+              {{- if .env }}
+              env:
+                {{- toYaml .env | nindent 16 }}
+              {{- end }}
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: {{ .storage | default "10Gi" }}
+            {{- if .storageClassName }}
+            storageClassName: {{ .storageClassName }}
+            {{- end }}
+    {{- end }}
+  {{- if .Values.elasticsearch.updateStrategy }}
+  updateStrategy:
+    {{- toYaml .Values.elasticsearch.updateStrategy | nindent 4 }}
+  {{- end }}
+  {{- if .Values.elasticsearch.podDisruptionBudget }}
+  podDisruptionBudget:
+    {{- toYaml .Values.elasticsearch.podDisruptionBudget | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,13 @@
+{{- if .Values.dedupService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: dedup-service
+spec:
+  ports:
+    - port: {{ .Values.dedupService.servicePort }}
+      targetPort: {{ .Values.dedupService.servicePort }}
+  selector:
+    app: dedup-service
+  type: ClusterIP
+{{- end }}

@@ -1,0 +1,13 @@
+{{- if .Values.golemPostgres.enabled}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: vector-golem
+spec:
+  ports:
+    - port: {{ .Values.golemPostgres.vectorGolem.servicePort }}
+      targetPort: {{ .Values.golemPostgres.vectorGolem.servicePort }}
+  selector:
+    app: golem-postgres
+  type: ClusterIP
+{{- end }}

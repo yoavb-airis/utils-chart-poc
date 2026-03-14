@@ -1,0 +1,3249 @@
+{{- if .Values.dagster.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: external-metadata-config
+  namespace: default
+data:
+  configmap-metadata.json: |
+    {
+        "external_metadata":
+        [
+            {
+            "record_id":
+                {
+                "location": ".id",
+                "default": "unknown_record_id",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".filename",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,100}$",
+                "path_regex": "([^/]+)$",
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".filename",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".chat.platform",
+                "default": "tiktok",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".sender.user_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".external_metadata.general_location",
+                "default": "unknown_general_location",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".chat.title",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[\\s\\S]{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".external_metadata.amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".external_metadata.amount_of_likes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".metadata.views",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".metadata.saved_peer_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".metadata.forwards",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".metadata.replies.replies_pts",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".metadata.reactions",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".chat.date",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".sender.last_updated",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".external_metadata.gps_latitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".external_metadata.description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "RawData":
+                {
+                "location": ".external_metadata.raw_data",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ],
+        "tiktok":
+        [
+           {
+            "OriginalRecordId": {
+                "location": ".id",
+                "default": "unknown_original_record_id",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "FileName": {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "orig_filename": {
+                "location": ".file_name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Platform": {
+                "location": ".chat.platform",
+                "default": "tiktok",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Account": {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Group": {
+                "location": ".chat.channel_id",
+                "default": "-",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "ProfileId": {
+                "location": ".author",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": "^.{1,800}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GeneralLocation": {
+                "location": ".General_location",
+                "default": "unknown_general_location",
+                "function": "CAST_TO_STRING",
+                "validation": "^.{1,800}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Caption": {
+                "location": ".caption",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": "^.{1,800}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfSubscribers": {
+                "location": ".Amount_of_subscribers",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfLikes": {
+                "location": ".like_count",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfDislikes": {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfViews": {
+                "location": ".view_count",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfSaves": {
+                "location": ".save_count",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfShares": {
+                "location": ".repost_count",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfComments": {
+                "location": ".comment_count",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfReactions": {
+                "location": ".repost_count",
+                "default": 0,
+                "function": "CAST_TO_INT",
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "PublishedDate": {
+                "location": ".timestamp",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "LastEditDate": {
+                "location": ".timestamp",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "VideoSong": {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "ContentTags": {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "TaggedPeople": {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "TaggedUsernames": {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "DefaultLanguage": {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "DefaultAudioLanguage": {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "FeedSentiment": {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GPSLocation": {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GPSLatitude": {
+                "location": ".external_metadata.gps_latitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GPSLongitude": {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Description": {
+                "location": ".Description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Misc_Body_Text": {
+                "location": ".Misc_Body_Text",
+                "default": "unknown",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AirisPipelineId": {
+                "location": ".media_link",
+                "default": "unknown",
+                "function": "PREPEND_GS_AND_HASH",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": "(.+)\\.[^.]+"
+            },
+            "TextMessage": {
+                "location": ".TextMessage",
+                "default": "unknown_text_message",
+                "function": "CAST_TO_STRING",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "ReplyToId": {
+                "location": ".ReplyToId",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AvatarUrl": {
+                "location": ".AvatarUrl",
+                "default": "unknown_avatar_url",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "RecordThumbnailUrl": {
+                "location": ".RecordThumbnailUrl",
+                "default": "unknown_record_thumbnail_url",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "PostID": {
+                "location": ".id",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            }
+        }
+        ],
+        "dallas":
+        [
+            {
+            "record_id": {
+                "location": ".id",
+                "default": "unknown_record_id",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:@\\u0590-\\u05FF\\u200E\\u200F]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "FileName": {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": null,
+                "extract_regex": null
+            },
+            "OriginalRecordId":
+                {
+                "location": ".post_id",
+                "default": "unknown_original_record_id",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "orig_filename": {
+                "location": ".file_name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Platform": {
+                "location": ".chat.platform",
+                "default": "uploaded",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Account": {
+                "location": ".account",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{0,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Group": {
+                "location": ".account",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "ProfileId": {
+                "location": ".post_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GeneralLocation": {
+                "location": ".external_metadata.general_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Caption": {
+                "location": ".caption",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{0,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfSubscribers": {
+                "location": ".external_metadata.amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfLikes": {
+                "location": ".like_count",
+                "default": 0,
+                "function": null,
+                "validation": "^.{0,10}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfDislikes": {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfViews": {
+                "location": ".view_count",
+                "default": 0,
+                "function": null,
+                "validation": "^.{0,10}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfSaves": {
+                "location": ".metadata.saved_peer_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfShares": {
+                "location": ".metadata.forwards",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfComments": {
+                "location": ".comment_count",
+                "default": 0,
+                "function": null,
+                "validation": "^.{0,10}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "AmountOfReactions": {
+                "location": ".repost_count",
+                "default": 0,
+                "function": null,
+                "validation": "^.{0,10}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "PublishedDate": {
+                "location": ".date",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "LastEditDate": {
+                "location": ".date",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "VideoSong": {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "ContentTags": {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "TaggedPeople": {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "TaggedUsernames": {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "DefaultLanguage": {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "DefaultAudioLanguage": {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "FeedSentiment": {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GPSLocation": {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GPSLatitude": {
+                "location": ".geo_lat",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "GPSLongitude": {
+                "location": ".geo_long",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Description": {
+                "location": ".external_metadata.description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "RawData": {
+                "location": ".raw_data",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Airis_Pipeline_Id": {
+                "location": ".media_link",
+                "default": "unknow",
+                "function": "PREPEND_GS_AND_HASH",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Avatar_Url": {
+                "location": ".avatar_url",
+                "default": "unknown_avatar_url",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Record_Thumbnail_Url": {
+                "location": ".record_thumbnail_url",
+                "default": "unknown_record_thumbnail_url",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Reply_To_Id": {
+                "location": ".reply_to_msg_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Misc_Hello":
+                {
+                "location": ".hello",
+                "default": "unknown",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Text_Message": {
+                "location": ".text_message",
+                "default": "unknown_text_message",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            }
+        }
+        ],
+        "x":
+        [
+            {
+            "orig_filename":
+                {
+                "location": ".file_name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "OriginalRecordId":
+                {
+                "location": ".post_id",
+                "default": "unknown_original_record_id",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".webpage_site_name",
+                "default": "twitter",
+                "function": "EXTRACT_DOMAIN",
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": "tmp/([^/]+)/",
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".author",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".author",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".from_id",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": "^.{1,800}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".General_location",
+                "default": "unknown_general_location",
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".caption",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": "^.{1,800}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".Amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".like_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".Amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".view_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".Amount_of_saves",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".repost_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".comment_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".repost_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".timestamp",
+                "default": null,
+                "function": "TRANSFORM_TWITTER_DATE",
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".timestamp",
+                "default": null,
+                "function": "TRANSFORM_TWITTER_DATE",
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".Video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".Content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".Tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".Default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".geo_source",
+                "default": "unknown_gps_location",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>@/]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".geo_lat",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".geo_long",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PrivacyLevel":
+                {
+                "location": ".privacy_level",
+                "default": "private",
+                "function": null,
+                "validation": "^(public|privat|privacy)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".webpage_description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Misc_BodyText":
+                {
+                "location": ".body_text",
+                "default": "unknown",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Airis_Pipeline_Id":
+                {
+                "location": ".media_link",
+                "default": "unknown",
+                "function": "PREPEND_GS_AND_HASH",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Text_Message":
+                {
+                "location": ".text_message",
+                "default": "unknown_text_message",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Reply_To_Id":
+                {
+                "location": ".reply_to_msg_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Avatar_Url":
+                {
+                "location": ".avatar_url",
+                "default": "unknown_avatar_url",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Record_Thumbnail_Url":
+                {
+                "location": ".record_thumbnail_url",
+                "default": "unknown_record_thumbnail_url",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ],
+        "instagram":
+        [
+            {
+            "record_id":
+                {
+                "location": ".post_id",
+                "default": "unknown_record_id",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\_.,;!?()<>]{1,100}$",
+                "path_regex": "([^/]+)$",
+                "extract_regex": null
+                },
+            "OriginalRecordId":
+                {
+                "location": ".post_id",
+                "default": "unknown_original_record_id",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".file_name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\_.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".chat.platform",
+                "default": "instagram",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".author",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".author",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".post_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".external_metadata.general_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".caption",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[\\s\\S]{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".external_metadata.amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".like_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".view_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".metadata.saved_peer_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".metadata.forwards",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".comment_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".repost_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".timestamp",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".timestamp",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".external_metadata.gps_latitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".external_metadata.description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "RawData":
+                {
+                "location": ".external_metadata.raw_data",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Airis_Pipeline_Id": {
+                "location": ".media_link",
+                "default": "unknow",
+                "function": "PREPEND_GS_AND_HASH",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Reply_To_Id": {
+                "location": ".reply_to_msg_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Text_Message": {
+                "location": ".message2",
+                "default": "unknown_text_message",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ],
+        "youtube":
+        [
+            {
+            "OriginalRecordId":
+                {
+                "location": ".post_id",
+                "default": "unknown_original_record_id",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": "([^/]+)$",
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".filename",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".chat.platform",
+                "default": "youtube",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".author",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".author",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".sender.user_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".external_metadata.general_location",
+                "default": "unknown_general_location",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".caption",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[\\s\\S]{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".external_metadata.amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".like_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".view_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".metadata.saved_peer_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".repost_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".comment_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".metadata.reactions",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".timestamp",
+                "default": "00-00-00T00:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".sender.last_updated",
+                "default": "00-00-00T00:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".external_metadata.gps_latitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".external_metadata.description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "RawData":
+                {
+                "location": ".external_metadata.raw_data",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Airis_Pipeline_Id":
+                {
+                "location": ".media_link",
+                "default": "unknown",
+                "function": "PREPEND_GS_AND_HASH",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+                "Text_Message":
+                {
+                "location": ".message2",
+                "default": "unknown_text_message",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ],
+        "facebook":
+        [
+            {
+            "record_id":
+                {
+                "location": ".id",
+                "default": "unknown_record_id",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".filename",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": "([^/]+)$",
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".filename",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".chat.platform",
+                "default": "tiktok",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".sender.user_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".external_metadata.general_location",
+                "default": null,
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".chat.title",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[\\s\\S]{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".external_metadata.amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".external_metadata.amount_of_likes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".metadata.views",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".metadata.saved_peer_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".metadata.forwards",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".metadata.replies.replies_pts",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".metadata.reactions",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".chat.date",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".sender.last_updated",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".external_metadata.gps_latitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".external_metadata.description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "RawData":
+                {
+                "location": ".external_metadata.raw_data",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            },
+            {
+            "record_id":
+                {
+                "location": ".link",
+                "default": "unknown_record_id",
+                "function": "EXTRACT_VIDEO_ID",
+                "validation": "^[a-zA-Z0-9]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".filename",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ],
+        "telegram":
+        [
+            {
+            "record_id":
+                {
+                "location": ".video_id",
+                "default": "unknown_record_id",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\_.,;!?()<>]{1,100}$",
+                "path_regex": "([^/]+)$",
+                "extract_regex": null
+                },
+            "OriginalRecordId":
+                {
+                "location": ".post_id",
+                "default": "unknown_original_record_id",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".file_name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\_.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".chat.platform",
+                "default": "telegram",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".uploader",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".uploader",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".post_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".external_metadata.general_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".caption",
+                "default": "unknown",
+                "function": "CAST_TO_STRING",
+                "validation": "^.{1,800}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".Amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".Amount_of_likes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".Amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".metadata.views",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".Amount_of_saves",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".Amount_of_shares",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".Amount_of_comments",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".Amount_of_reactions",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".date",
+                "default": null,
+                "function": "TRANSFORM_DATE_TO_DATETIME",
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".date",
+                "default": null,
+                "function": "TRANSFORM_DATE_TO_DATETIME",
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".Video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".Content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".Tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".Default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".GPS_location",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Misc_BodyText":
+                {
+                "location": ".body_text",
+                "default": "unknown",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Airis_Pipeline_Id": {
+                "location": ".media_link",
+                "default": "unknow",
+                "function": "PREPEND_GS_AND_HASH",
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Avatar_Url": {
+                "location": ".avatar_url",
+                "default": "unknown_avatar_url",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Record_Thumbnail_Url": {
+                "location": ".record_thumbnail_url",
+                "default": "unknown_record_thumbnail_url",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Reply_To_Id": {
+                "location": ".reply_to_msg_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^.{0,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+            },
+            "Text_Message": {
+                "location": ".message2",
+                "default": "unknown_text_message",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ],
+        "intelay":
+        [
+            {
+            "record_id":
+                {
+                "location": ".id",
+                "default": "unknown_record_id",
+                "function": "EXTRACT_VIDEO_ID",
+                "validation": "^[a-zA-Z0-9]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FileName":
+                {
+                "location": ".name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": "([^/]+)$",
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Platform":
+                {
+                "location": ".chat.platform",
+                "default": "tiktok",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Account":
+                {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Group":
+                {
+                "location": ".chat.channel_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ProfileId":
+                {
+                "location": ".sender.user_id",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9_\\-]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GeneralLocation":
+                {
+                "location": ".external_metadata.general_location",
+                "default": "unknown_general_location",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Caption":
+                {
+                "location": ".chat.title",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[\\s\\S]{1,5000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSubscribers":
+                {
+                "location": ".external_metadata.amount_of_subscribers",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfLikes":
+                {
+                "location": ".external_metadata.amount_of_likes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfDislikes":
+                {
+                "location": ".external_metadata.amount_of_dislikes",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfViews":
+                {
+                "location": ".metadata.views",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfSaves":
+                {
+                "location": ".metadata.saved_peer_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfShares":
+                {
+                "location": ".metadata.forwards",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfComments":
+                {
+                "location": ".metadata.replies.replies_pts",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "AmountOfReactions":
+                {
+                "location": ".metadata.reactions",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "PublishedDate":
+                {
+                "location": ".chat.date",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "LastEditDate":
+                {
+                "location": ".sender.last_updated",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "VideoSong":
+                {
+                "location": ".external_metadata.video_song",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "ContentTags":
+                {
+                "location": ".external_metadata.content_tags",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedPeople":
+                {
+                "location": ".external_metadata.tagged_people",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "TaggedUsernames":
+                {
+                "location": ".external_metadata.tagged_usernames",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultLanguage":
+                {
+                "location": ".external_metadata.default_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "DefaultAudioLanguage":
+                {
+                "location": ".external_metadata.default_audio_language",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "FeedSentiment":
+                {
+                "location": ".external_metadata.feed_sentiment",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLocation":
+                {
+                "location": ".external_metadata.gps_location",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLatitude":
+                {
+                "location": ".external_metadata.gps_latitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "GPSLongitude":
+                {
+                "location": ".external_metadata.gps_longitude",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Description":
+                {
+                "location": ".external_metadata.description",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,2000}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "RawData":
+                {
+                "location": ".external_metadata.raw_data",
+                "default": "unknown",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,10000}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            },
+            {
+            "actor_uid":
+                {
+                "location": ".id",
+                "default": "unknown_record_id",
+                "function": "EXTRACT_VIDEO_ID",
+                "validation": "^[a-zA-Z0-9]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "name":
+                {
+                "location": ".name",
+                "default": "unknown_actor_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "profile_pic_url":
+                {
+                "location": ".profile_pic_url",
+                "default": "unknown_profile_pic_url",
+                "function": null,
+                "validation": "^(https?://)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([/\\w \\.-]*)*/?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "verified_flag":
+                {
+                "location": ".verified_flag",
+                "default": "false",
+                "function": null,
+                "validation": "^(true|false|0|1)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "account_urn":
+                {
+                "location": ".account_urn",
+                "default": "unknown_account_urn",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "platform_code":
+                {
+                "location": ".platform",
+                "default": "unknown_platform_code",
+                "function": null,
+                "validation": "^(uploaded|youtube|facebook|instagram|telegram|whatsapp|twitter|tiktok)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "handle":
+                {
+                "location": ".handle",
+                "default": "unknown_handle",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "phone_number":
+                {
+                "location": ".phone_number",
+                "default": "unknown_phone_number",
+                "function": null,
+                "validation": "^[+]?[0-9\\s\\-\\(\\)]{7,20}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "email":
+                {
+                "location": ".email",
+                "default": "unknown_email",
+                "function": null,
+                "validation": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "profile_pic_url_account":
+                {
+                "location": ".profile_pic_url_account",
+                "default": "unknown_profile_pic_url_account",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "verified_flag_account":
+                {
+                "location": ".verified_flag_account",
+                "default": "false",
+                "function": null,
+                "validation": "^(true|false|0|1)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "created_at":
+                {
+                "location": ".created_at",
+                "default": "16-07-2025T12:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "follower_count":
+                {
+                "location": ".follower_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "community_urn":
+                {
+                "location": ".community_urn",
+                "default": "unknown_community_urn",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "community_type":
+                {
+                "location": ".community_type",
+                "default": "unknown",
+                "function": null,
+                "validation": "^(public|private|restricted|closed|open|secret)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "title":
+                {
+                "location": ".title",
+                "default": "unknown_title",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "description":
+                {
+                "location": ".description",
+                "default": "unknown_description",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "member_count":
+                {
+                "location": ".member_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "privacy_level":
+                {
+                "location": ".privacy_level",
+                "default": "unknown",
+                "function": null,
+                "validation": "^(public|private|friends|friends_of_friends|custom|restricted)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "created_at_community":
+                {
+                "location": ".created_at_community",
+                "default": "16-07-2025T12:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "content_urn":
+                {
+                "location": ".content_urn",
+                "default": "unknown_content_urn",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "content_type":
+                {
+                "location": ".content_type",
+                "default": "unknown",
+                "function": null,
+                "validation": "^(post|story|reel|video|image|text|poll|live|highlight|album)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "timestamp":
+                {
+                "location": ".timestamp",
+                "default": "16-07-2025T12:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "crawl_timestamp":
+                {
+                "location": ".crawl_timestamp",
+                "default": "unknown_crawl_timestamp",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "body_text":
+                {
+                "location": ".body_text",
+                "default": "unknown_body_text",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "media_url":
+                {
+                "location": ".media_url",
+                "default": "unknown_media_url",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "reply_to_urn":
+                {
+                "location": ".reply_to_urn",
+                "default": "unknown_reply_to_urn",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "view_count":
+                {
+                "location": ".view_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "like_count":
+                {
+                "location": ".like_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "dislike_count":
+                {
+                "location": ".dislike_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "share_count":
+                {
+                "location": ".share_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "save_count":
+                {
+                "location": ".save_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "comment_count":
+                {
+                "location": ".comment_count",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "tags":
+                {
+                "location": ".tags",
+                "default": {},
+                "function": null,
+                "validation": "^\\[.*\\]$|^\\{.*\\}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "video_song":
+                {
+                "location": ".video_song",
+                "default": "unknown_video_song",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "media_duration":
+                {
+                "location": ".media_duration",
+                "default": 0.0,
+                "function": null,
+                "validation": "^-?\\d*\\.\\d+$|^-?\\d+(\\.\\d+)?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "avg_bitrate":
+                {
+                "location": ".avg_bitrate",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "file_name":
+                {
+                "location": ".file_name",
+                "default": "unknown_file_name",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "created":
+                {
+                "location": ".created",
+                "default": "16-07-2025T12:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "modified":
+                {
+                "location": ".modified",
+                "default": "16-07-2025T12:00:00",
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Airis_Pipeline_Id":
+                {
+                "location": ".media_url",
+                "default": "unknown_pipeline_id",
+                "function": "HASH_MD5",
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".name",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            },
+            {
+            "interaction_id":
+                {
+                "location": ".interaction_id",
+                "default": 0,
+                "function": null,
+                "validation": "^-?\\d+$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "interaction_type":
+                {
+                "location": ".interaction_type",
+                "default": "unknown",
+                "function": null,
+                "validation": "^(like|dislike|share|save|comment|follow|unfollow|mention|reply|repost)$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "timestamp_interaction":
+                {
+                "location": ".timestamp",
+                "default": null,
+                "function": null,
+                "validation": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(Z|[+-]\\d{2}:?\\d{2})?$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "value_interaction":
+                {
+                "location": ".value",
+                "default": "unknown_value_interaction",
+                "function": null,
+                "validation": null,
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "initiator_actor_uid":
+                {
+                "location": ".initiator_actor_uid",
+                "default": "unknown_initiator_actor_uid",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "target_content_urn":
+                {
+                "location": ".target_content_urn",
+                "default": "unknown_target_content_urn",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>:]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "target_account_urn":
+                {
+                "location": ".target_account_urn",
+                "default": "unknown_target_account_urn",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "Airis_Pipeline_Id":
+                {
+                "location": ".initiator_actor_uid",
+                "default": "unknown_pipeline_id",
+                "function": "HASH_MD5",
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,200}$",
+                "path_regex": null,
+                "extract_regex": null
+                },
+            "orig_filename":
+                {
+                "location": ".target_content_urn",
+                "default": "unknown_orig_filename",
+                "function": null,
+                "validation": "^[a-zA-Z0-9\\s\\-\\.,;!?()<>]{1,100}$",
+                "path_regex": null,
+                "extract_regex": null
+                }
+            }
+        ]
+    }
+
+
+{{- end }}

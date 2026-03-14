@@ -1,0 +1,63 @@
+{{- if .Values.generalPostgres.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: general-postgres
+  labels:
+    app: general-postgres
+    {{- include "utils-chart.labels" (dict "labels" .Values.generalPostgres.labels) | indent 4 }}
+spec:
+  serviceName: general-postgres
+  replicas: {{ .Values.generalPostgres.replicas }}
+  selector:
+    matchLabels:
+      app: general-postgres
+  template:
+    metadata:
+      labels:
+        app: general-postgres
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+      - name: general-postgres
+        resources:
+          {{- toYaml .Values.generalPostgres.resources | nindent 12 }}
+        image: "{{ .Values.generalPostgres.image_name }}:{{ .Values.generalPostgres.image_tag }}"
+        ports:
+        - containerPort: {{ .Values.generalPostgres.servicePort }}
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.generalPostgres.username }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.generalPostgres.password }}
+        - name: PGDATA
+          value: /data/postgres
+        volumeMounts:
+        - name: general-postgres-pvc
+          mountPath: /data
+        - name: sql-init-mount
+          mountPath: /docker-entrypoint-initdb.d
+        - name: dshm
+          mountPath: /dev/shm
+      volumes:
+      - name: sql-init-mount
+        configMap:
+          name: general-postgres-initsql
+          items:
+          - key: init.sql
+            path: init.sql
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 2Gi
+
+  volumeClaimTemplates:
+  - metadata:
+      name: general-postgres-pvc
+    spec:
+      accessModes: [ {{ .Values.generalPostgres.storage.accessMode }} ]
+      storageClassName: {{ .Values.generalPostgres.storage.storageClass }}
+      resources:
+        requests:
+          storage: {{ .Values.generalPostgres.storage.size }}
+{{- end }}

@@ -1,0 +1,13 @@
+{{- if and .Values.appwrite.enabled (not .Values.appwrite.mariadbOperator.enabled) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "mariadb"
+spec:
+  ports:
+    - port: {{ .Values.appwrite.mariadb.servicePort }}
+      targetPort: {{ .Values.appwrite.mariadb.servicePort }}
+  selector:
+    app: "mariadb"
+  type: ClusterIP
+{{- end }}

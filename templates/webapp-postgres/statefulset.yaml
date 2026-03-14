@@ -1,0 +1,67 @@
+{{- if .Values.webappPostgres.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: webapp-postgres
+  labels:
+    app: webapp-postgres
+    {{- include "utils-chart.labels" (dict "labels" .Values.webappPostgres.labels) | indent 4 }}
+spec:
+  serviceName: webapp-postgres
+  replicas: {{ .Values.webappPostgres.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: webapp-postgres
+  template:
+    metadata:
+      labels:
+        app: webapp-postgres
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+      - name: webapp-postgres
+        resources:
+          {{- toYaml .Values.webappPostgres.resources | nindent 12 }}
+        image: "{{ .Values.webappPostgres.image_name }}:{{ .Values.webappPostgres.image_tag }}"
+        imagePullPolicy: IfNotPresent
+        args:
+          - postgres
+          - -c
+          - shared_preload_libraries=pg_cron
+          - -c
+          - cron.database_name=webapp
+        ports:
+        - containerPort: {{ .Values.webappPostgres.servicePort }}
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.webappPostgres.username }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.webappPostgres.password }}
+        - name: POSTGRES_DB
+          value: webapp
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: webapp-postgres-pvc
+          mountPath: /var/lib/postgresql/data
+        - name: init-scripts
+          mountPath: /docker-entrypoint-initdb.d
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: webapp-postgres-config
+
+  volumeClaimTemplates:
+  - metadata:
+      name: webapp-postgres-pvc
+    spec:
+      accessModes: [ {{ .Values.webappPostgres.storage.accessMode }} ]
+      storageClassName: {{ .Values.webappPostgres.storage.storageClass }}
+      resources:
+        requests:
+          storage: {{ .Values.webappPostgres.storage.size }}
+{{- end }}

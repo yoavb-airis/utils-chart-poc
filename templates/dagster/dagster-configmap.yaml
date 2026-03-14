@@ -1,0 +1,95 @@
+{{- if .Values.dagster.enabled }}
+apiVersion:  v1
+kind:  ConfigMap
+metadata:
+  name:  dagster-config
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name | quote }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace | quote }}
+data:
+  # postgres
+  DAGSTER_PG_USERNAME:  postgres
+  DAGSTER_PG_PASSWORD:  postgres
+  DAGSTER_PG_DB:  dagster
+  DAGSTER_PG_HOST: general-postgres.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}
+  DAGSTER_GRAPHQL_HOST: localhost
+
+  # postgres-backup
+  POSTGRES_HOST: general-postgres.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}
+  POSTGRES_DATABASE: dagster
+  POSTGRES_BACKUP_ALL: "true"
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  SCHEDULE: "@daily"
+
+  # Vectorgolem
+  VECTORGOLEM_HOST: vector-golem.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}
+  ENV_PARAM_VECTORGOLEM_HOST: vector-golem.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}
+  ENV_PARAM_VECTORGOLEM_PORT: {{ .Values.golemPostgres.vectorGolem.servicePort | quote }}
+
+  # s3
+  MAILBOX_UPLOAD_BUCKET: {{ .Values.global.s3_bucket | default "airis-results" }}
+  MAILBOX_S3_DIRECTORY: {{ .Values.global.s3_directory }}
+  AWS_REGION: us-east-1
+  S3_BUCKET: {{ .Values.global.s3_bucket | default "airis-results" }}
+  S3_REGION: us-east-1
+  S3_PREFIX: backup/dagster
+  S3_ENDPOINT: https://s3.amazonaws.com
+
+  # app
+  REACT_APP_PROJECT: airis
+  REACT_APP_DATABASE_ID: airisdb
+  MARIA_DB_USER: root
+  MARIA_DB_HOST: {{ .Values.appwrite.mariadb.host }}
+  MARIA_DB_PORT: "3306"
+  MARIA_DB_PASSWORD: rootsecretpassword
+  MARIA_DB_DATABASE: airis
+  FILE_SERVER_URL: http://{{ .Values.dagster.externalServices.fileServerHost }}/storage
+  APPWRITE_BASE_ENDPOINT: "http://appwrite.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}/v1" # should be internal
+  DATA_LOADER_URL: "http://data-loader.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:8000"
+  REACT_APP_STORAGE_PATH_PREFIX: "storage/uploads/app-airis/{{ .Values.global.s3_directory }}"
+  REACT_APP_WS_BASE_URL: "webapp-api-server.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:{{ .Values.dagster.externalServices.webappApiServerPort }}/ws" # For notify rules job
+  DAGSTER_MARIADB_BACKUP_SCHEDULE: "0 12 * * *" # Every day at 12PM
+  OBJECT_RECLASSIFICATION_POLL_SCHEDULE: "*/2 * * * *" # Every 2 minutes. See https://crontab.guru/#*/2_*_*_*_*
+  OBJECT_RECLASSIFICATION_HYPER_BATCH_SIZE: "5"
+
+  # P.O
+  POST_OFFICE_URL: "http://post-office.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:2704"
+  AIRISML_POST_OFFICE_URL: "http://post-office.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:2704"
+  AIRISML_QUEUE_WAIT_TIMEOUT: "1800"
+  # General dagster
+  CONFIG_PATH: config/config.yaml # relative to charon_pipelines
+  EXTERNAL_METDATA_CONFIG_PATH: /configmap/configmap-metadata.json
+  JOB_SAMPLE_RATE: "1"
+  TOO_MANY_SLEEP_TIME: "30"
+  STEP_TTL: "1560"
+  AIRIS_OTEL_ENABLED: "false"
+  DAGSTER_QUEUE_THRESHOLD_MEDIA: "30"
+  DAGSTER_OVERALL_CONCURRENCY_LIMIT: "20"
+  DAGSTER_STORAGE_CLEANUP_TTL: "2"
+  DAGSTER_STORAGE_BASE_DIR: /opt/dagster/storage
+  MAX_CONCURRENCY_INSIDE_DAG: "20"
+  DAGSTER_HOST: "dagster-webserver.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}"
+  DAGSTER_PORT: "5000"
+  SENSORS_BATCH_SIZE: "8"
+  FS_PREFIX: "{{ .Values.storage.prefix }}"
+  FACES_RECLUSTERING_BASE_PATH: "{{ .Values.storage.prefix }}{{ .Values.global.s3_bucket }}/faces_reclustering/"
+  OBJECT_RECLASSIFICATION_BASE_PATH: "{{ .Values.storage.prefix }}{{ .Values.global.s3_bucket }}/object_reclassification/"
+  SPEEDOPS_URL: "http://{{ .Values.dagster.externalServices.speedopsHost }}"
+  METADATA_BATCH_SIZE : "250"
+  MEDIA_URL_PREFIX: "gs://{{ .Values.global.s3_bucket | default "airis-results" }}/{{ .Values.global.s3_directory }}/"
+  NATS_URL: "nats://nats.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:{{ .Values.nats.servicePort | default 4222 }}"
+  EXTRACTION_PROMPT: {{ .Values.global.extraction_prompt | toJson | quote }}
+  LABELS_PROMPT: {{ .Values.global.labels_prompt | toJson | quote }}
+
+  # File_system
+  BUCKET_SENSOR_SOURCE_BUCKET: "{{ .Values.global.s3_bucket | default "gs://airis-results" }}"
+  BUCKET_SENSOR_DEST_BUCKET: "gs://{{ .Values.global.s3_bucket | default "airis-results" }}/{{ .Values.global.s3_directory }}"
+  BUCKET_SENSOR_BATCH_SIZE: "100"
+  DATA_SOURCE: "{{ .Values.global.data_source | default "imperial" }}"
+  MACHINE_NAME: "{{ .Values.global.s3_directory | default "imperial" }}"
+  BUCKET_TO_NATS_MAX_FILES_PER_RUN: "50"
+{{- end }}

@@ -1,0 +1,10 @@
+{{- if .Values.aiModulesConfig.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-modules-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  config.yaml: |
+    {{- .Values.aiModulesConfig.configYaml | nindent 4 }}
+{{- end }}

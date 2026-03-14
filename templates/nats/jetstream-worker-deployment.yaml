@@ -1,0 +1,93 @@
+{{- if .Values.nats.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jetstream-rules-worker
+  labels:
+    app: jetstream-rules-worker
+    {{- with .Values.nats.worker.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.nats.worker.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: jetstream-rules-worker
+  template:
+    metadata:
+      labels:
+        app: jetstream-rules-worker
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+        - name: rules-worker
+          resources:
+            {{- toYaml .Values.nats.worker.resources | nindent 12 }}
+          image: "{{ .Values.nats.worker.image_name }}:{{ .Values.nats.worker.image_tag }}"
+          imagePullPolicy: Always
+          command: ["uv", "run", "python", "-m", "workers.rules.worker"]
+          envFrom:
+            - configMapRef:
+                name: jetstream-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  grep -q 'workers.rules.worker' /proc/1/cmdline || exit 1
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jetstream-notifications-worker
+  labels:
+    app: jetstream-notifications-worker
+    {{- with .Values.nats.worker.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.nats.worker.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: jetstream-notifications-worker
+  template:
+    metadata:
+      labels:
+        app: jetstream-notifications-worker
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+        - name: notifications-worker
+          resources:
+            {{- toYaml .Values.nats.worker.resources | nindent 12 }}
+          image: "{{ .Values.nats.worker.image_name }}:{{ .Values.nats.worker.image_tag }}"
+          imagePullPolicy: Always
+          command: ["uv", "run", "python", "-m", "workers.notifications.worker"]
+          envFrom:
+            - configMapRef:
+                name: jetstream-config
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  grep -q 'workers.notifications.worker' /proc/1/cmdline || exit 1
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

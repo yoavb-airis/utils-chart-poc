@@ -1,0 +1,81 @@
+{{- if and .Values.appwrite.enabled .Values.appwrite.mariadbOperator.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: mariadb
+  labels:
+    app: mariadb
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  image: "{{ .Values.appwrite.mariadb.image_name }}:{{ .Values.appwrite.mariadb.image_tag }}"
+  port: {{ .Values.appwrite.mariadb.servicePort }}
+
+  rootPasswordSecretKeyRef:
+    name: mariadb-new-root
+    key: _APP_DB_ROOT_PASS
+    generate: false
+
+  {{- if and .Values.appwrite.mariadbOperator.restore.enabled .Values.appwrite.mariadbOperator.restore.backupName }}
+  bootstrapFrom:
+    backupRef:
+      name: {{ .Values.appwrite.mariadbOperator.restore.backupName }}
+      kind: PhysicalBackup
+  {{- end }}
+
+  storage:
+    size: {{ .Values.appwrite.mariadb.storage.size }}
+    storageClassName: {{ .Values.appwrite.mariadb.storage.storageClass }}
+    resizeInUseVolumes: true
+
+  resources:
+    {{- toYaml .Values.appwrite.mariadb.resources | nindent 4 }}
+
+  myCnf: |
+    [mariadb]
+    bind-address=0.0.0.0
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    max_allowed_packet=256M
+    max_connections=500
+    max_user_connections=0
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_general_ci
+    character-set-client-handshake=FALSE
+    init-connect='SET NAMES utf8mb4 COLLATE utf8mb4_general_ci'
+
+    [client]
+    default-character-set=utf8mb4
+
+    [mysql]
+    default-character-set=utf8mb4
+
+  podMetadata:
+    labels:
+      app: mariadb
+      {{- with .Values.appwrite.labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  readinessProbe:
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 3
+
+  metrics:
+    enabled: true
+    exporter:
+      podMetadata:
+        labels:
+          app: mariadb-metrics
+          {{- with .Values.appwrite.labels }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+{{- end }}

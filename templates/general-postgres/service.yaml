@@ -1,0 +1,13 @@
+{{- if .Values.generalPostgres.enabled}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: general-postgres
+spec:
+  ports:
+    - port: {{ .Values.generalPostgres.servicePort }}
+      targetPort: {{ .Values.generalPostgres.servicePort }}
+  selector:
+    app: general-postgres
+  type: ClusterIP
+{{- end }}

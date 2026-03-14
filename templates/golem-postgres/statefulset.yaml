@@ -1,0 +1,88 @@
+{{- if .Values.golemPostgres.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: golem-postgres
+  labels:
+    app: golem-postgres
+    {{- include "utils-chart.labels" (dict "labels" .Values.golemPostgres.labels) | indent 4 }}
+spec:
+  serviceName: golem-postgres
+  replicas: {{ .Values.golemPostgres.replicas }}
+  selector:
+    matchLabels:
+      app: golem-postgres
+  template:
+    metadata:
+      labels:
+        app: golem-postgres
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+      - name: golem-postgres
+        resources:
+          {{- toYaml .Values.golemPostgres.resources | nindent 12 }}
+        image: "{{ .Values.golemPostgres.image_name }}:{{ .Values.golemPostgres.image_tag }}"
+        ports:
+        - containerPort: {{ .Values.golemPostgres.servicePort }}
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.golemPostgres.username }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.golemPostgres.password }}
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata   # SUBDIRECTORY to avoid lost+found
+        volumeMounts:
+        - name: golem-postgres-pvc
+          mountPath: /var/lib/postgresql/data       # Mount PVC higher
+        - name: sql-init-mount
+          mountPath: /docker-entrypoint-initdb.d
+        - name: vector-golem-volume
+          mountPath: /vectorgolem
+
+      - name: vector-golem-service
+        resources:
+          {{- toYaml .Values.golemPostgres.vectorGolem.resources | nindent 12 }}
+        image: "{{ .Values.golemPostgres.vectorGolem.image_name }}:{{ .Values.golemPostgres.vectorGolem.image_tag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: {{ .Values.golemPostgres.vectorGolem.servicePort }}
+        env:
+          - name: VECTORGOLEM_DB_HOST
+            value: localhost
+          - name: VECTORGOLEM_DB_PORT
+            value: "5432"
+          - name: VECTORGOLEM_DB_USER
+            value: postgres
+          - name: VECTORGOLEM_DB_PASS
+            value: postgres
+          - name: VECTORGOLEM_ANALYSIS_DB_SHARED_DIR
+            value: /vectorgolem
+          - name: VECTORGOLEM_DB_SIDE_SHARED_DIR
+            value: /vectorgolem
+          - name: VECTORGOLEM_INGEST_DB_SHARED_DIR
+            value: /vectorgolem
+        volumeMounts:
+          - name: vector-golem-volume
+            mountPath: /vectorgolem
+
+      volumes:
+        - name: sql-init-mount
+          configMap:
+            name: golem-postgres-initsql
+            items:
+            - key: init.sql
+              path: init.sql
+        - name: vector-golem-volume
+          emptyDir: {}
+
+  volumeClaimTemplates:
+  - metadata:
+      name: golem-postgres-pvc
+    spec:
+      accessModes: [ {{ .Values.golemPostgres.storage.accessMode }} ]
+      storageClassName: {{ .Values.golemPostgres.storage.storageClass }}
+      resources:
+        requests:
+          storage: {{ .Values.golemPostgres.storage.size }}
+{{- end }}

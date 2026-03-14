@@ -1,0 +1,43 @@
+{{- if .Values.appwrite.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-realtime
+  labels:
+    app: appwrite-realtime
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.appwrite.realtime.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: appwrite-realtime
+  template:
+    metadata:
+      labels:
+        app: appwrite-realtime
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+        - name: appwrite-realtime
+          image: "{{ .Values.appwrite.server.image_name }}:{{ .Values.appwrite.server.image_tag }}"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 2
+              memory: "1G"
+            limits:
+              cpu: 2
+              memory: "2Gi"
+          command:
+            - "realtime"
+          env:
+            - name: _APP_REDIS_HOST
+              value: redis.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}
+          ports:
+            - containerPort: {{ .Values.appwrite.server.servicePort }}
+          envFrom:
+            - configMapRef:
+                name: appwrite-config
+{{- end }}

@@ -1,0 +1,15 @@
+{{- if .Values.autoScaler.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: auto-scaler-deployment-access-binding
+  namespace: {{ .Values.global.namespace }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.global.serviceAccountName | default "default" }}
+  namespace: {{ .Values.global.namespace }}
+roleRef:
+  kind: Role
+  name: auto-scaler-deployment-access
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

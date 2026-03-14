@@ -1,0 +1,106 @@
+{{- if .Values.appwrite.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite
+  labels:
+    app: appwrite
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.appwrite.server.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: appwrite
+  template:
+    metadata:
+      labels:
+        app: appwrite
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+        - name: appwrite
+          resources:
+            {{- toYaml .Values.appwrite.server.resources | nindent 12 }}
+          image: "{{ .Values.appwrite.server.image_name }}:{{ .Values.appwrite.server.image_tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.appwrite.server.servicePort }}
+          envFrom:
+            - configMapRef:
+                name: appwrite-config
+          volumeMounts:
+            - name: appwrite-storage
+              mountPath: /storage/uploads
+            - name: appwrite-cache
+              mountPath: /storage/cache
+            - name: appwrite-config
+              mountPath: /storage/config
+            - name: appwrite-certificates
+              mountPath: /storage/certificates
+            - name: appwrite-functions
+              mountPath: /storage/functions
+        - name: redis
+          resources:
+            {{- toYaml .Values.appwrite.redis.resources | nindent 12 }}
+          image: "{{ .Values.appwrite.redis.image_name }}:{{ .Values.appwrite.redis.image_tag }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "redis-server"
+            - "--maxmemory"
+            - {{ .Values.appwrite.redis.maxmemory | quote }}
+            - "--maxmemory-policy"
+            - "allkeys-lru"
+            - "--maxmemory-samples"
+            - "5"
+          volumeMounts:
+          - mountPath: /data
+            name: data
+          ports:
+          - containerPort: {{ .Values.appwrite.redis.servicePort }}
+            name: redis
+        - name: maintenance
+          image: "{{ .Values.appwrite.server.image_name }}:{{ .Values.appwrite.server.image_tag }}"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "0"
+              memory: "1Gi"
+            limits:
+              cpu: "0"
+              memory: "1Gi"
+          command:
+            - "maintenance"
+          envFrom:
+            - configMapRef:
+                name: appwrite-config
+        - name: appwrite-worker-databases
+          image: "{{ .Values.appwrite.server.image_name }}:{{ .Values.appwrite.server.image_tag }}"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1
+              memory: "150Mi"
+            limits:
+              cpu: 1
+              memory: "500Mi"
+          command:
+            - "worker-databases"
+          envFrom:
+            - configMapRef:
+                name: appwrite-config
+      volumes:
+        - name: appwrite-storage
+          emptyDir: {}
+        - name: appwrite-cache
+          emptyDir: {}
+        - name: appwrite-config
+          emptyDir: {}
+        - name: appwrite-certificates
+          emptyDir: {}
+        - name: appwrite-functions
+          emptyDir: {}
+        - name: data
+          emptyDir: {}
+{{- end }}

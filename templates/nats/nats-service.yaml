@@ -1,0 +1,25 @@
+{{- if .Values.nats.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats
+  labels:
+    app: nats
+spec:
+  ports:
+    - name: client
+      port: {{ .Values.nats.servicePort | default 4222 }}
+      targetPort: {{ .Values.nats.servicePort | default 4222 }}
+    - name: monitor
+      port: {{ .Values.nats.monitorPort | default 8222 }}
+      targetPort: {{ .Values.nats.monitorPort | default 8222 }}
+    {{- if .Values.nats.metrics.enabled }}
+    - name: metrics
+      port: 7777
+      targetPort: 7777
+    {{- end }}
+  selector:
+    app: nats
+  type: ClusterIP
+{{- end }}

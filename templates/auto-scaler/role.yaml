@@ -1,0 +1,11 @@
+{{- if .Values.autoScaler.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: auto-scaler-deployment-access
+  namespace: {{ .Values.global.namespace }}
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments", "deployments/scale"]
+  verbs: ["get", "list", "update", "patch"]
+{{- end }}

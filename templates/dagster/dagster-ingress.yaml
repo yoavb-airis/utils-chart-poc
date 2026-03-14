@@ -1,0 +1,23 @@
+{{- if .Values.dagster.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dagster-webserver-ingress
+  {{- with .Values.dagster.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.dagster.ingress.ingressClassName | quote }}
+  rules:
+    - host: {{ .Values.dagster.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dagster-webserver
+                port:
+                  number: {{ .Values.dagster.servicePort }}
+{{- end }}

@@ -1,0 +1,408 @@
+# =============================================================================
+# Global Settings
+# =============================================================================
+global:
+  namespace: default
+  cluster_address: svc.cluster.local
+  serviceAccountName: default
+  imagePullSecrets: []
+  s3_bucket: "airis-results"
+  s3_directory: ""
+  assets_bucket: ""
+  data_source: "imperial"
+  extraction_prompt: ""
+  labels_prompt: ""
+  pilot_branch: ""
+
+# =============================================================================
+# Storage Configuration
+# =============================================================================
+storage:
+  is_s3: false
+  prefix: "gs://"
+  assets_pvc:
+    accessMode: ReadWriteMany
+    size: 1Ti
+    storageClass: ""
+    driver: "gcsfuse.csi.storage.gke.io"
+    mountOptions: []
+    volumeAttributes: {}
+
+# =============================================================================
+# 1. GENERAL POSTGRES
+# =============================================================================
+generalPostgres:
+  enabled: true
+  replicas: 1
+  image_name: "postgis/postgis"
+  image_tag: "15-3.3"
+  servicePort: 5432
+  username: postgres
+  password: postgres
+  labels:
+    airis-labs.com/full-mode: "true"
+    airis-labs.com/app-only-mode: "true"
+  resources:
+    limits:
+      cpu: 16
+      memory: 16Gi
+    requests:
+      cpu: 16
+      memory: 16Gi
+  storage:
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    size: 100Gi
+  backup:
+    enabled: false
+    replicas: 1
+    image_name: ""
+    image_tag: ""
+    s3_host: "https://s3.amazonaws.com"
+    s3_bucket: "airis-results"
+
+# =============================================================================
+# 2. GOLEM POSTGRES
+# =============================================================================
+golemPostgres:
+  enabled: true
+  replicas: 1
+  image_name: ""
+  image_tag: ""
+  servicePort: 5432
+  username: postgres
+  password: postgres
+  labels:
+    airis-labs.com/app-only-mode: "true"
+    airis-labs.com/full-mode: "true"
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+  storage:
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    size: 50Gi
+  vectorGolem:
+    image_name: ""
+    image_tag: ""
+    servicePort: 61728
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
+
+# =============================================================================
+# 3. WEBAPP POSTGRES
+# =============================================================================
+webappPostgres:
+  enabled: true
+  replicas: 1
+  image_name: "postgres"
+  image_tag: "17"
+  servicePort: 5432
+  username: postgres
+  password: postgres
+  labels:
+    airis-labs.com/app-only-mode: "true"
+    airis-labs.com/full-mode: "true"
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+  storage:
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    size: 20Gi
+  migration:
+    enabled: true
+    image_name: ""
+    image_tag: ""
+    command: ""
+
+# =============================================================================
+# 4. NATS / JETSTREAM
+# =============================================================================
+nats:
+  enabled: true
+  replicaCount: 1
+  image_name: "nats"
+  image_tag: "latest"
+  servicePort: 4222
+  monitorPort: 8222
+  labels:
+    airis-labs.com/app-only-mode: "true"
+    airis-labs.com/full-mode: "true"
+  metrics:
+    enabled: true
+  prometheusExporter:
+    image_name: "natsio/prometheus-nats-exporter"
+    image_tag: "latest"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  worker:
+    enabled: true
+    replicas: 2
+    image_name: ""
+    image_tag: ""
+    labels:
+      airis-labs.com/app-only-mode: "true"
+      airis-labs.com/full-mode: "true"
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  externalServices:
+    airisSearchServicePort: 8003
+    webappApiServerPort: 8083
+
+# =============================================================================
+# 5. DAGSTER
+# =============================================================================
+dagster:
+  enabled: true
+  replicas: 1
+  servicePort: 5000
+  image_name: ""
+  image_tag: ""
+  labels:
+    airis-labs.com/full-mode: "true"
+  slackbot:
+    enabled: true
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  runtimeClassName: ""
+  schedulerName: ""
+  resources:
+    limits:
+      cpu: 24
+      memory: 24Gi
+    requests:
+      cpu: 24
+      memory: 24Gi
+  storage:
+    accessMode: ReadWriteOnce
+    storageClass: ""
+    size: 50Gi
+  ingress:
+    host: ""
+    ingressClassName: ""
+  postgresBackup:
+    enabled: false
+    image_name: ""
+    image_tag: ""
+  externalServices:
+    fileServerHost: ""
+    speedopsHost: ""
+    webappApiServerPort: 8083
+
+# =============================================================================
+# 6. APPWRITE STACK
+# =============================================================================
+appwrite:
+  enabled: true
+  labels:
+    airis-labs.com/app-only-mode: "true"
+    airis-labs.com/full-mode: "true"
+  server:
+    replicas: 1
+    servicePort: 80
+    image_name: ""
+    image_tag: ""
+    resources:
+      limits:
+        cpu: 1
+        memory: 2Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+  console:
+    replicas: 1
+    image_name: ""
+    image_tag: ""
+    resources:
+      limits:
+        cpu: 0
+        memory: 1Gi
+      requests:
+        cpu: 0
+        memory: 1Gi
+  realtime:
+    replicas: 1
+    image_name: ""
+    image_tag: ""
+  redis:
+    servicePort: 6379
+    image_name: "redis"
+    image_tag: "7.2"
+    maxmemory: "2048mb"
+    resources:
+      limits:
+        cpu: 1
+        memory: 2.2Gi
+      requests:
+        cpu: 1
+        memory: 2.2Gi
+  mariadb:
+    replicas: 1
+    host: mariadb.default.svc.cluster.local
+    servicePort: 3306
+    image_name: ""
+    image_tag: ""
+    backup:
+      enabled: false
+    resources:
+      limits:
+        cpu: 1
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+    storage:
+      accessMode: ReadWriteOnce
+      storageClass: ""
+      size: 20Gi
+  mariadbOperator:
+    enabled: true
+    backup:
+      enabled: true
+      runImmediately: false
+      schedule: "0 0 * * *"
+      maxRetention: "168h"
+      storageSize: "20Gi"
+    restore:
+      enabled: false
+      backupName: "mariadb-physical-backup"
+  initializeWebapp:
+    image_name: ""
+    image_tag: ""
+  ingress:
+    ingressClassName: ""
+    annotations: {}
+    pathType: Prefix
+    appwrite:
+      host: ""
+    console:
+      host: ""
+    realtime:
+      host: ""
+
+# =============================================================================
+# 7. ELASTICSEARCH
+# =============================================================================
+elasticsearch:
+  enabled: false
+  name: elasticsearch
+  namespace: elastic-system
+  version: "8.17.0"
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  nodeSets:
+    - name: default
+      count: 3
+      resources:
+        limits:
+          memory: 2Gi
+          cpu: 1
+        requests:
+          memory: 2Gi
+          cpu: 500m
+      storage: 10Gi
+  podDisruptionBudget:
+    spec:
+      minAvailable: 2
+  backup:
+    enabled: false
+    bucket: ""
+    repository: gcs-backup
+    policy: daily-snapshots
+    schedule: "0 0 0 * * ?"
+    retentionDays: 7
+
+# =============================================================================
+# 9. AUTO SCALER
+# =============================================================================
+autoScaler:
+  enabled: false
+  replicas: 1
+  image_name: ""
+  image_tag: ""
+  labels: {}
+  scaling_timeout: 900
+  max_idle_time: 900
+  resources:
+    limits:
+      cpu: 2
+      memory: 3Gi
+    requests:
+      cpu: 2
+      memory: 3Gi
+
+# =============================================================================
+# 10. DEDUP SERVICE
+# =============================================================================
+dedupService:
+  enabled: true
+  replicas: 1
+  servicePort: 61725
+  image_name: ""
+  image_tag: ""
+  labels:
+    airis-labs.com/full-mode: "true"
+  resources:
+    limits:
+      cpu: 0.5
+      memory: 1Gi
+    requests:
+      cpu: 0.5
+      memory: 1Gi
+
+# =============================================================================
+# 11. DOWNLOAD ASSETS
+# =============================================================================
+downloadAssets:
+  enabled: true
+
+# =============================================================================
+# 12. EXTERNAL SECRETS
+# =============================================================================
+externalSecrets:
+  secretsEnabled: false
+  secretStoreName: "gcp-secret-store"
+  secrets: []
+  multiKeySecrets: []
+
+# =============================================================================
+# 13. AI MODULES CONFIG
+# =============================================================================
+aiModulesConfig:
+  enabled: false
+  configYaml: ""
+
+# =============================================================================
+# 14. KAI (Run:ai) QUEUES
+# =============================================================================
+kai:
+  enabled: false
+  queueName: airis
+  parentQueueName: default

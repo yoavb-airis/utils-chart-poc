@@ -1,0 +1,22 @@
+{{ if .Values.kai.enabled }}
+---
+apiVersion: scheduling.run.ai/v2
+kind: Queue
+metadata:
+  name: {{ .Values.kai.queueName }}
+spec:
+  parentQueue: {{ .Values.kai.parentQueueName }}
+  resources:
+    cpu:
+      quota: -1
+      limit: -1
+      overQuotaWeight: 1
+    gpu:
+      quota: -1
+      limit: -1
+      overQuotaWeight: 1
+    memory:
+      quota: -1
+      limit: -1
+      overQuotaWeight: 1
+{{- end -}}

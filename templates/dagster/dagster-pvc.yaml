@@ -1,0 +1,15 @@
+{{- if .Values.dagster.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dagster-webserver-pvc
+  labels:
+    app: dagster-webserver
+spec:
+  accessModes:
+    - {{ .Values.dagster.storage.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.dagster.storage.size }}
+  storageClassName: {{ .Values.dagster.storage.storageClass }}
+{{- end }}

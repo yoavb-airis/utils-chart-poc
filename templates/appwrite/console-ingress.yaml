@@ -1,0 +1,25 @@
+{{- if .Values.appwrite.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    {{- range $key, $value := .Values.appwrite.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  name: appwrite-console
+  labels:
+    app: appwrite-console
+spec:
+  ingressClassName: {{ .Values.appwrite.ingress.ingressClassName | quote }}
+  rules:
+    - host: {{ .Values.appwrite.ingress.console.host }}
+      http:
+        paths:
+          - path: /console
+            pathType: {{ .Values.appwrite.ingress.pathType }}
+            backend:
+              service:
+                name: "appwrite-console"
+                port:
+                  number: {{ .Values.appwrite.server.servicePort }}
+{{- end}}

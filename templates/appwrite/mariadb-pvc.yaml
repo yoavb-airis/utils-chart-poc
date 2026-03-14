@@ -1,0 +1,13 @@
+{{- if and .Values.appwrite.enabled (not .Values.appwrite.mariadbOperator.enabled) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+spec:
+  accessModes:
+    - {{ .Values.storage.mariadb.accessMode }}
+  storageClassName: {{ .Values.storage.mariadb.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.storage.mariadb.size }}
+{{- end }}

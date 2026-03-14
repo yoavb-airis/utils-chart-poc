@@ -1,0 +1,8 @@
+{{- if .Values.elasticsearch.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.elasticsearch.namespace }}
+  labels:
+    name: {{ .Values.elasticsearch.namespace }}
+{{- end }}

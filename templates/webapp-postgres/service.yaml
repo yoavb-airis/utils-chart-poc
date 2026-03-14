@@ -1,0 +1,13 @@
+{{- if .Values.webappPostgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-postgres
+spec:
+  ports:
+    - port: {{ .Values.webappPostgres.servicePort }}
+      targetPort: {{ .Values.webappPostgres.servicePort }}
+  selector:
+    app: webapp-postgres
+  type: ClusterIP
+{{- end }}

@@ -1,0 +1,13 @@
+{{- if .Values.appwrite.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "appwrite"
+spec:
+  ports:
+    - port: {{ .Values.appwrite.server.servicePort }}
+      targetPort: {{ .Values.appwrite.server.servicePort }}
+  selector:
+    app: "appwrite"
+  type: ClusterIP
+{{- end }}

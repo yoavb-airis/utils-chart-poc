@@ -1,0 +1,19 @@
+{{- if and .Values.appwrite.enabled .Values.appwrite.mariadbOperator.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: mariadb-appwrite-database
+  labels:
+    app: mariadb
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  mariaDbRef:
+    name: mariadb
+    waitForIt: true
+  characterSet: utf8mb4
+  collate: utf8mb4_general_ci
+  name: appwrite
+  cleanupPolicy: Skip  # CRITICAL: Prevents database from being dropped on CR deletion/recreation
+{{- end }}

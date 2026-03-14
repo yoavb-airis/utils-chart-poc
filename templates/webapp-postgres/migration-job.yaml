@@ -1,0 +1,60 @@
+{{- if .Values.webappPostgres.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: webapp-postgres-migrations
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        app: webapp-postgres-migrations
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      restartPolicy: Never
+
+      initContainers:
+        - name: check-postgres
+          image: postgres:17
+          command: ["sh", "-c"]
+          args:
+            - |
+              until pg_isready \
+                -h webapp-postgres.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }} \
+                -p {{ .Values.webappPostgres.servicePort }} \
+                -U {{ .Values.webappPostgres.username }};
+              do
+                echo "Waiting for webapp-postgres to be ready...";
+                sleep 5;
+              done;
+              echo "webapp-postgres is ready.";
+
+      containers:
+        - name: migrate
+          image: "{{ .Values.webappPostgres.migration.image_name }}:{{ .Values.webappPostgres.migration.image_tag }}"
+          imagePullPolicy: Always
+          workingDir: /app
+          {{- if .Values.webappPostgres.migration.command }}
+          command: {{ .Values.webappPostgres.migration.command }}
+          {{- else }}
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -eu
+              [ -f /app/alembic.ini ] || { echo "ERROR: /app/alembic.ini not found" >&2; exit 1; }
+              python -m alembic -c /app/alembic.ini upgrade head
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: airis-webapp-config
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

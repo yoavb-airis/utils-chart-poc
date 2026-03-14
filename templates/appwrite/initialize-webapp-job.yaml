@@ -1,0 +1,73 @@
+{{- if .Values.appwrite.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: initialize-mariadb-and-appwrite
+spec:
+  completions: 1          # Ensures that the job runs only once
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        app: initialize-mariadb-and-appwrite
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      initContainers:
+        - name: check-mariadb
+          image: "{{ .Values.appwrite.mariadb.image_name }}:{{ .Values.appwrite.mariadb.image_tag }}"
+          command: ["sh", "-c"]
+          args:
+            - |
+              until mariadb -h {{ .Values.appwrite.mariadb.host }} --silent --password=rootsecretpassword --skip_ssl;
+              do
+                echo "Waiting for MariaDB to be ready...";
+                sleep 5;
+              done;
+              echo "MariaDB is ready.";
+        - name: check-appwrite
+          image: curlimages/curl:latest
+          command: ["sh", "-c"]
+          args:
+            - |
+              until curl --silent --output /dev/null --max-time 5 \
+                  "http://appwrite.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}/v1";
+              do
+                echo "Waiting for the endpoint to be ready...";
+                sleep 5;
+              done;
+              echo "Endpoint is ready.";
+      containers:
+        - name: initialize
+          image: "{{ .Values.appwrite.initializeWebapp.image_name }}:{{ .Values.appwrite.initializeWebapp.image_tag }}"
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: appwrite-config
+            - configMapRef:
+                name: airis-webapp-config
+          env:
+            - name: APPWRITE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: appwrite-api-key
+                  key: APPWRITE_API_KEY
+            - name: APPWRITE_ADMIN_PASS
+              value: password #TODO: Change this to a secure value from secret. This scret currently is not a part of the pilot deployment
+            - name: APPWRITE_HOSTNAME
+              value: {{ .Values.appwrite.ingress.appwrite.host }}
+            - name: REACT_APP_HIDDEN_OBJECTS_LIST
+              value: "[]"
+            - name: APPWRITE_BASE_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: airis-webapp-config
+                  key: APPWRITE_ENDPOINT
+      restartPolicy: Never
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+
+{{- end }}

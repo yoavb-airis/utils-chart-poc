@@ -1,0 +1,13 @@
+{{- if .Values.dagster.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: dagster-webserver
+spec:
+  ports:
+    - port: {{ .Values.dagster.servicePort }}
+      targetPort: {{ .Values.dagster.servicePort }}
+  selector:
+    app: dagster-webserver
+  type: ClusterIP
+{{- end }}

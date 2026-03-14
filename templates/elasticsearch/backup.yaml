@@ -1,0 +1,73 @@
+{{- if and .Values.elasticsearch.enabled .Values.elasticsearch.backup.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: elasticsearch-backup-setup
+  namespace: {{ .Values.elasticsearch.namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "20"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: setup-backup
+          image: curlimages/curl:8.11.1
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              ES_URL="https://{{ .Values.elasticsearch.name }}-es-http:9200"
+              ES_USER="elastic"
+              ES_PASS=$(cat /mnt/elastic-credentials/elastic)
+
+              # Wait for Elasticsearch
+              until curl -sk -u "$ES_USER:$ES_PASS" "$ES_URL/_cluster/health" | grep -q '"status":"green"\|"status":"yellow"'; do
+                sleep 10
+              done
+
+              # Create GCS snapshot repository
+              curl -sk -X PUT -u "$ES_USER:$ES_PASS" -H "Content-Type: application/json" \
+                "$ES_URL/_snapshot/{{ .Values.elasticsearch.backup.repository }}" \
+                -d '{
+                  "type": "gcs",
+                  "settings": {
+                    "bucket": "{{ .Values.elasticsearch.backup.bucket }}",
+                    "base_path": "{{ .Values.global.pilot_branch | replace "/" "-" }}-es-backup",
+                    "client": "default"
+                  }
+                }'
+
+              # Create SLM policy
+              curl -sk -X PUT -u "$ES_USER:$ES_PASS" -H "Content-Type: application/json" \
+                "$ES_URL/_slm/policy/{{ .Values.elasticsearch.backup.policy }}" \
+                -d '{
+                  "schedule": "{{ .Values.elasticsearch.backup.schedule }}",
+                  "name": "<snapshot-{now/d}>",
+                  "repository": "{{ .Values.elasticsearch.backup.repository }}",
+                  "config": {
+                    "indices": ["*"],
+                    "ignore_unavailable": true,
+                    "include_global_state": true
+                  },
+                  "retention": {
+                    "expire_after": "{{ .Values.elasticsearch.backup.retentionDays }}d",
+                    "min_count": 1,
+                    "max_count": 50
+                  }
+                }'
+          volumeMounts:
+            - name: elastic-credentials
+              mountPath: /mnt/elastic-credentials
+              readOnly: true
+      volumes:
+        - name: elastic-credentials
+          secret:
+            secretName: {{ .Values.elasticsearch.name }}-es-elastic-user
+{{- end }}

@@ -1,0 +1,14 @@
+{{- if .Values.downloadAssets.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: assets-pvc
+  namespace: {{ .Values.global.namespace }}
+spec:
+  accessModes:
+  - {{ .Values.storage.assets_pvc.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.storage.assets_pvc.size }}
+  storageClassName: {{ .Values.storage.assets_pvc.storageClass }}
+{{- end }}

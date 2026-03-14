@@ -1,0 +1,71 @@
+{{- if .Values.autoScaler.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auto-scaler
+  labels:
+    app: auto-scaler
+    {{- include "utils-chart.labels" (dict "labels" .Values.autoScaler.labels) | indent 4 }}
+spec:
+  replicas: {{ .Values.autoScaler.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: auto-scaler
+  template:
+    metadata:
+      labels:
+        app: auto-scaler
+    spec:
+      serviceAccountName: "{{ .Values.global.serviceAccountName | default "default" }}"
+      containers:
+        - name: auto-scaler
+          resources:
+            {{- toYaml .Values.autoScaler.resources | nindent 12 }}
+          image: "{{ .Values.autoScaler.image_name }}:{{ .Values.autoScaler.image_tag }}"
+          imagePullPolicy: Always
+          env:
+            - name: DAGSTER_GRAPHQL_URL
+              value: http://dagster-webserver.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:{{ .Values.dagster.servicePort }}/graphql
+            - name: ENVIRONMENT_NAME
+              value: {{ .Values.global.s3_directory }}
+            - name: PROJECT_ID
+              value: {{ .Values.global.assets_bucket }}
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: auto-scaler-slack-url
+                  key: SLACK_AUTO_SCALER_WEBHOOK
+            - name: WEBAPP_STORAGE_PATH
+              value: "{{ .Values.storage.prefix }}{{ .Values.global.s3_bucket }}/storage/uploads/app-airis/{{ .Values.global.s3_directory }}"
+            - name: MAX_IDLE_TIME
+              value: "{{ .Values.autoScaler.max_idle_time }}"
+            - name: SCALING_TIMEOUT
+              value: "{{ .Values.autoScaler.scaling_timeout }}"
+            - name: IS_RUNNING_IN_CLUSTER
+              value: "True"
+            {{- if not .Values.storage.is_s3 }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /secrets/gs-secret.json
+            {{- end }}
+          volumeMounts:
+            {{- if not .Values.storage.is_s3 }}
+            - name: gs-secret
+              mountPath: /secrets
+              readOnly: true
+            {{- end }}
+
+      volumes:
+        {{- if not .Values.storage.is_s3 }}
+        - name: gs-secret
+          secret:
+            secretName: gs-secret
+            items:
+            - key: gs-secret.json
+              path: gs-secret.json
+        {{- end }}
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

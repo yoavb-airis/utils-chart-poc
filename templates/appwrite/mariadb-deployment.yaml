@@ -1,0 +1,92 @@
+{{- if and .Values.appwrite.enabled (not .Values.appwrite.mariadbOperator.enabled) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "mariadb"
+  labels:
+    app: "mariadb"
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  selector:
+    matchLabels:
+      app: "mariadb"
+  replicas: {{ .Values.appwrite.mariadb.replicas | default 1 }}
+  template:
+    metadata:
+      labels:
+        app: "mariadb"
+        {{- with .Values.appwrite.labels }}
+        {{- toYaml . | nindent 4 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+      - name: mariadb
+        resources:
+          {{- toYaml .Values.appwrite.mariadb.resources | nindent 12 }}
+        image: "{{ .Values.appwrite.mariadb.image_name }}:{{ .Values.appwrite.mariadb.image_tag }}"
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: data
+        - mountPath: /etc/my-no-secrets.cnf  # The standard path of MariaDB's configuration file
+          name: mariadb-conf
+          subPath: my-no-secrets.cnf
+        env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: "appwrite-config"
+                key: _APP_DB_SCHEMA
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: "appwrite-config"
+                key: _APP_DB_ROOT_PASS
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: "appwrite-config"
+                key: _APP_DB_USER
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: "appwrite-config"
+                key: _APP_DB_PASSWORD
+          {{- if .Values.appwrite.mariadb.backup.enabled }}
+          - name: S3_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-backup-aws-creds
+                key: AWS_ACCESS_KEY_ID
+          - name: S3_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-backup-aws-creds
+                key: AWS_SECRET_ACCESS_KEY
+          {{- end }}
+        ports:
+        - containerPort: {{ .Values.appwrite.mariadb.servicePort }}
+          name: mariadb
+
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+      - name: mariadb-conf
+        configMap:
+          name: mariadb-config
+          items:
+          - key: CNF_FILE
+            path: my-no-secrets.cnf
+{{- end }}

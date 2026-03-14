@@ -1,0 +1,30 @@
+{{- if .Values.appwrite.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-console
+  labels:
+    app: appwrite-console
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.appwrite.console.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: appwrite-console
+  template:
+    metadata:
+      labels:
+        app: appwrite-console
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      containers:
+        - name: appwrite-console
+          resources:
+            {{- toYaml .Values.appwrite.console.resources | nindent 12 }}
+          image: "{{ .Values.appwrite.console.image_name }}:{{ .Values.appwrite.console.image_tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.appwrite.server.servicePort }}
+{{- end }}

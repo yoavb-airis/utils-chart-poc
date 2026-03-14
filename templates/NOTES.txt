@@ -1,0 +1,41 @@
+Utils Chart POC deployed successfully!
+
+Components deployed:
+{{- if .Values.generalPostgres.enabled }}
+  - general-postgres (StatefulSet, port {{ .Values.generalPostgres.servicePort }})
+{{- end }}
+{{- if .Values.golemPostgres.enabled }}
+  - golem-postgres (StatefulSet, port {{ .Values.golemPostgres.servicePort }})
+  - vector-golem (sidecar, port {{ .Values.golemPostgres.vectorGolem.servicePort }})
+{{- end }}
+{{- if .Values.webappPostgres.enabled }}
+  - webapp-postgres (StatefulSet, port {{ .Values.webappPostgres.servicePort }})
+{{- end }}
+{{- if .Values.nats.enabled }}
+  - NATS (Deployment, port {{ .Values.nats.servicePort }})
+{{- end }}
+{{- if .Values.nats.worker.enabled }}
+  - JetStream Workers (rules + notifications)
+{{- end }}
+{{- if .Values.dagster.enabled }}
+  - Dagster Webserver (Deployment, port {{ .Values.dagster.servicePort }})
+{{- end }}
+{{- if .Values.appwrite.enabled }}
+  - AppWrite Stack (server, console, realtime, redis, mariadb)
+{{- end }}
+{{- if .Values.elasticsearch.enabled }}
+  - Elasticsearch ({{ .Values.elasticsearch.name }})
+{{- end }}
+{{- if .Values.dedupService.enabled }}
+  - Dedup Service
+{{- end }}
+{{- if .Values.autoScaler.enabled }}
+  - Auto Scaler
+{{- end }}
+{{- if .Values.downloadAssets.enabled }}
+  - Assets PV/PVC
+{{- end }}
+
+NOTE: This chart depends on services deployed by:
+  - service-chart-poc (post-office, airis-search-service, webapp-api-server, etc.)
+  - poc-chart (AI modules)

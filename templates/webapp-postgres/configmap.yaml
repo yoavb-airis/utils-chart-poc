@@ -1,0 +1,13 @@
+{{- if .Values.webappPostgres.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webapp-postgres-config
+data:
+  init-pgcron.sql: |
+    -- Enable pg_cron extension
+    CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+    -- Grant usage to postgres user (if needed for specific database)
+    GRANT USAGE ON SCHEMA cron TO postgres;
+{{- end }}

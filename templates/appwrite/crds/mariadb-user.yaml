@@ -1,0 +1,44 @@
+{{- if and .Values.appwrite.enabled .Values.appwrite.mariadbOperator.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: mariadb-appwrite-user
+  labels:
+    app: mariadb
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  mariaDbRef:
+    name: mariadb
+    waitForIt: true
+  passwordSecretKeyRef:
+    name: mariadb-new-root
+    key: _APP_DB_PASSWORD
+  maxUserConnections: 0
+  name: user
+  host: "%"
+  cleanupPolicy: Skip  # CRITICAL: Prevents user from being dropped on CR deletion/recreation
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: mariadb-appwrite-grant
+  labels:
+    app: mariadb
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  mariaDbRef:
+    name: mariadb
+    waitForIt: true
+  privileges:
+    - ALL PRIVILEGES
+  database: appwrite
+  table: "*"
+  username: user
+  host: "%"
+  grantOption: true
+  cleanupPolicy: Skip  # CRITICAL: Prevents grant from being revoked on CR deletion/recreation
+{{- end }}

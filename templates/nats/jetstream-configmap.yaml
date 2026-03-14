@@ -1,0 +1,30 @@
+{{- if .Values.nats.worker.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jetstream-config
+data:
+  NATS_URL: "nats://nats.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:{{ .Values.nats.servicePort | default 4222 }}"
+  PUSH_GATEWAY_URL: "http://pushgateway.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:9091"
+  AIRIS_SEARCH_SERVICE_URL: "http://airis-search-service.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:{{ .Values.nats.externalServices.airisSearchServicePort | default 8003 }}"
+  REACT_APP_WS_BASE_URL: "webapp-api-server.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}:{{ .Values.nats.externalServices.webappApiServerPort | default 8083 }}"
+  # Rules Worker Configuration
+  RULES_MAX_CONCURRENT_MESSAGES: "5"
+  RULES_FETCH_BATCH_SIZE: "10"
+  RULES_FETCH_TIMEOUT: "5"
+  RULES_MAX_DELIVER: "5"
+  RULES_ACK_WAIT: "30"
+  # Dead Letter Queue Configuration
+  DLQ_STREAM_NAME: "RULES_DLQ"
+  DLQ_SUBJECT: "rules.dlq"
+  DLQ_STREAM_MAX_MSGS: "10000"
+  DLQ_STREAM_MAX_AGE: "3600"
+  DLQ_RETRY_DELAY: "600"
+  # Notifications Worker Configuration
+  NOTIFICATIONS_MAX_CONCURRENT_MESSAGES: "5"
+  NOTIFICATIONS_FETCH_BATCH_SIZE: "10"
+  NOTIFICATIONS_FETCH_TIMEOUT: "5"
+  NOTIFICATIONS_MAX_DELIVER: "5"
+  NOTIFICATIONS_ACK_WAIT: "30"
+  MONITOR_FLAG: "false"
+{{- end }}

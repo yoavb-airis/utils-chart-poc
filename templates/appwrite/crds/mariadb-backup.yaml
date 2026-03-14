@@ -1,0 +1,39 @@
+{{- if and .Values.appwrite.enabled .Values.appwrite.mariadbOperator.enabled .Values.appwrite.mariadbOperator.backup.enabled }}
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: PhysicalBackup
+metadata:
+  name: mariadb-physical-backup
+  labels:
+    app: mariadb
+    {{- with .Values.appwrite.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  mariaDbRef:
+    name: mariadb
+    waitForIt: true
+  schedule:
+    cron: {{ .Values.appwrite.mariadbOperator.backup.schedule | default "0 4 * * 6" | quote }}
+    suspend: false
+    immediate: {{ .Values.appwrite.mariadbOperator.backup.runImmediately | default false }}
+  maxRetention: {{ .Values.appwrite.mariadbOperator.backup.maxRetention | default "720h" }}
+  compression: gzip
+  timeout: 2h
+  storage:
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: {{ .Values.appwrite.mariadbOperator.backup.storageSize | default "10Gi" }}
+      accessModes:
+        - ReadWriteOnce
+      {{- if .Values.appwrite.mariadbOperator.backup.storageClass }}
+      storageClassName: {{ .Values.appwrite.mariadbOperator.backup.storageClass }}
+      {{- end }}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+{{- end }}

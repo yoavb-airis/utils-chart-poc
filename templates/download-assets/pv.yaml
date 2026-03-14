@@ -1,0 +1,34 @@
+{{- if .Values.downloadAssets.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: assets-pv
+spec:
+  accessModes:
+  - {{ .Values.storage.assets_pvc.accessMode }}
+  capacity:
+    storage: {{ .Values.storage.assets_pvc.size }}
+  storageClassName: {{ .Values.storage.assets_pvc.storageClass | quote }}
+  {{ with .Values.storage.assets_pvc.mountOptions }}
+  mountOptions:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  csi:
+    driver: {{ .Values.storage.assets_pvc.driver }}
+    volumeHandle: {{ .Values.global.assets_bucket }}-assets
+    {{- if eq .Values.storage.assets_pvc.driver "gcsfuse.csi.storage.gke.io" }}
+    volumeAttributes:
+      bucketName: {{ .Values.global.assets_bucket | quote }}
+      {{- with .Values.storage.assets_pvc.volumeAttributes }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- else }}
+    {{- with .Values.storage.assets_pvc.volumeAttributes }}
+    volumeAttributes:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
+  claimRef:
+    name: assets-pvc
+    namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -1,0 +1,152 @@
+{{- if .Values.dagster.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dagster-webserver
+  labels:
+    app: dagster-webserver
+    {{- include "utils-chart.labels" (dict "labels" .Values.dagster.labels) | indent 4 }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: {{ .Values.dagster.replicas }}
+  selector:
+    matchLabels:
+      app: dagster-webserver
+  template:
+    metadata:
+      labels:
+        app: dagster-webserver
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName | default "default" }}
+      {{ with .Values.dagster.nodeSelector -}}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dagster.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dagster.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.dagster.runtimeClassName }}
+      runtimeClassName: {{ .Values.dagster.runtimeClassName | quote }}
+      {{- end }}
+      {{- if .Values.dagster.schedulerName }}
+      schedulerName: {{ .Values.dagster.schedulerName | quote }}
+      {{- end }}
+      containers:
+        {{- if .Values.dagster.postgresBackup.enabled }}
+        - name: postgres-backup
+          image: "{{ .Values.dagster.postgresBackup.image_name }}:{{ .Values.dagster.postgresBackup.image_tag }}"
+          envFrom:
+            - configMapRef:
+                name: dagster-config
+          env:
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-creds
+                  key: AWS_ACCESS_KEY_ID
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-creds
+                  key: AWS_SECRET_ACCESS_KEY
+        {{- end }}
+        - name: dagster-webserver
+          resources:
+            {{- toYaml .Values.dagster.resources | nindent 12 }}
+          image: "{{ .Values.dagster.image_name }}:{{ .Values.dagster.image_tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.dagster.servicePort }}
+          envFrom:
+            - configMapRef:
+                name: appwrite-config # This should be before the dagster config map since there are conflicting values
+            - configMapRef:
+                name: airis-webapp-config # This should be before the dagster config map since there are conflicting values
+            - configMapRef:
+                name: dagster-config
+          env:
+            - name: EXTERNAL_METADATA_CONFIG_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: external-metadata-config
+                  key: configmap-metadata.json
+            - name: APPWRITE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: appwrite-api-key
+                  key: APPWRITE_API_KEY
+            - name: ES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: speed-ops-es-credentials
+                  key: ES_URL
+            - name: ES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: speed-ops-es-credentials
+                  key: ES_USERNAME
+            - name: ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: speed-ops-es-credentials
+                  key: ES_PASSWORD
+            {{- if .Values.storage.is_s3 }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-creds
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-creds
+                  key: AWS_SECRET_ACCESS_KEY
+            {{- end }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /secrets/gs-secret.json
+            {{- if .Values.dagster.slackbot.enabled }}
+            - name: SLACK_DAGSTER_ETL_BOT_WEBHOOK
+              valueFrom:
+                secretKeyRef:
+                  name: slack-webhook-key
+                  key: SLACK_DAGSTER_ETL_BOT_WEBHOOK
+            {{- end }}
+            - name: DAGSTER_SENSOR_GRPC_TIMEOUT_SECONDS
+              value: "300"
+          volumeMounts:
+            - name: dagster-webserver-storage
+              mountPath: /data/dagster
+            {{- if not .Values.storage.is_s3 }}
+            - name: gs-secret
+              mountPath: /secrets
+              readOnly: true
+            {{- end }}
+          securityContext:
+            capabilities:
+                add:
+                - SYS_PTRACE
+      volumes:
+        - name: dagster-webserver-storage
+          persistentVolumeClaim:
+            claimName: dagster-webserver-pvc
+        {{- if not .Values.storage.is_s3 }}
+        - name: gs-secret
+          secret:
+            secretName: gs-secret
+            items:
+            - key: gs-secret.json
+              path: gs-secret.json
+        {{- end }}
+
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
