@@ -51,7 +51,7 @@ spec:
           {{- end }}
           envFrom:
             - configMapRef:
-                name: airis-webapp-config
+                name: dagster-config
 
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:

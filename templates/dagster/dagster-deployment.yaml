@@ -67,8 +67,6 @@ spec:
             - configMapRef:
                 name: appwrite-config # This should be before the dagster config map since there are conflicting values
             - configMapRef:
-                name: airis-webapp-config # This should be before the dagster config map since there are conflicting values
-            - configMapRef:
                 name: dagster-config
           env:
             - name: EXTERNAL_METADATA_CONFIG_JSON

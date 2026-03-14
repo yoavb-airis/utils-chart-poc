@@ -44,7 +44,7 @@ spec:
             - configMapRef:
                 name: appwrite-config
             - configMapRef:
-                name: airis-webapp-config
+                name: dagster-config
           env:
             - name: APPWRITE_API_KEY
               valueFrom:
@@ -58,10 +58,7 @@ spec:
             - name: REACT_APP_HIDDEN_OBJECTS_LIST
               value: "[]"
             - name: APPWRITE_BASE_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: airis-webapp-config
-                  key: APPWRITE_ENDPOINT
+              value: "http://appwrite.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}/v1"
       restartPolicy: Never
 
       {{- with .Values.global.imagePullSecrets }}

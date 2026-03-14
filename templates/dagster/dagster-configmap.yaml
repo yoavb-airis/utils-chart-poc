@@ -92,4 +92,80 @@ data:
   DATA_SOURCE: "{{ .Values.global.data_source | default "imperial" }}"
   MACHINE_NAME: "{{ .Values.global.s3_directory | default "imperial" }}"
   BUCKET_TO_NATS_MAX_FILES_PER_RUN: "50"
+
+  # --- Vars migrated from airis-webapp-config ---
+
+  # Webapp Postgres (dagster pipelines access webapp DB)
+  WEBAPP_POSTGRES_HOST: "webapp-postgres.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}"
+  WEBAPP_POSTGRES_PORT: {{ .Values.webappPostgres.servicePort | quote }}
+  WEBAPP_POSTGRES_DB: "webapp"
+  WEBAPP_POSTGRES_USER: {{ .Values.webappPostgres.username }}
+  WEBAPP_POSTGRES_PASSWORD: {{ .Values.webappPostgres.password }}
+
+  # Redis (overrides appwrite-config's "localhost" to actual redis service)
+  _APP_REDIS_HOST: "redis.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}"
+  _APP_REDIS_PORT: "6379"
+  _APP_REDIS_USER: ""
+  _APP_REDIS_PASSWORD: ""
+
+  # Tenant / identity
+  INDEX_NAME: "airis-{{ .Values.global.s3_directory }}"
+  REACH_TENANT: {{ .Values.global.s3_directory }}
+  SYSTEM_HOSTNAME: {{ .Values.appwrite.ingress.appwrite.host | quote }}
+  IS_AIO: "false"
+
+  # Appwrite endpoints (internal)
+  APPWRITE_HOSTNAME: {{ .Values.appwrite.ingress.appwrite.host | quote }}
+  APPWRITE_ENDPOINT: "http://appwrite.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}/v1"
+  APPWRITE_INTERNAL_NETWORK_ENDPOINT: "http://appwrite.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}/v1"
+  FS_APPWRITE_ENDPOINT: "http://appwrite.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}/v1"
+  APPWRITE_PROJECT_ID: "airis"
+  APPWRITE_DATABASE_ID: "airisdb"
+  APPWRITE_ADMIN_USER: "admin@airis-labs.com"
+
+  # Appwrite collection IDs (used by dagster pipelines)
+  APPWRITE_COLLECTION_ID: "videos"
+  APPWRITE_VIDEOS_COLLECTION_ID: "videos"
+  APPWRITE_OBJECTS_COLLECTION_ID: "objects"
+  APPWRITE_FACES_COLLECTION_ID: "faces"
+  APPWRITE_INTERNAL_METADATA_COLLECTION_ID: "internal_metadata"
+  APPWRITE_EXCLUDED_RECORDS_COLLECTION_ID: "excluded_records"
+  APPWRITE_EXTERNAL_METADATA_COLLECTION_ID: "external_metadata"
+  APPWRITE_SETTINGS_COLLECTION_ID: "settings"
+  APPWRITE_AUDIO_EFFECTS_COLLECTION_ID: "audio_effects"
+  APPWRITE_FEEDBACKS_COLLECTION_ID: "feedbacks"
+  APPWRITE_GEOLOCATIONS_COLLECTION_ID: "geolocations"
+  APPWRITE_CASES_COLLECTION_ID: "cases"
+  APPWRITE_CAPSULES_COLLECTION_ID: "capsules"
+  APPWRITE_NLP_COLLECTION_ID: "nlp"
+  APPWRITE_AUDITS_COLLECTION_ID: "audits"
+
+  # Webapp internal hostname
+  WEBAPP_INTERNAL_HOSTNAME: "airis-webapp.{{ .Values.global.namespace }}.{{ .Values.global.cluster_address }}"
+
+  # Pipeline config
+  QUERY_TABLE_NAME: "querying_table"
+  RULES_NOTIFICATIONS_WORKERS: "4"
+  RULES_NOTIFICATIONS_CHUNK_SIZE: "200"
+  SEARCH_FORBIDDEN_WORDS: ""
+  BASE_WORKING_DIRECTORY: "{{ .Values.storage.prefix }}{{ .Values.global.s3_bucket }}/face_search"
+
+  # Vectorgolem port (HOST already exists as ENV_PARAM_VECTORGOLEM_HOST)
+  VECTORGOLEM_PORT: {{ .Values.golemPostgres.vectorGolem.servicePort | quote }}
+
+  # Threshold table
+  THRESHOLD_PRECISION_TABLE: |
+    {
+      "THRESHOLD_PRECISION_0_0": {"threshold": 0, "precision": 0.0},
+      "THRESHOLD_PRECISION_0_1": {"threshold": 0, "precision": 0.1},
+      "THRESHOLD_PRECISION_0_2": {"threshold": 0, "precision": 0.2},
+      "THRESHOLD_PRECISION_0_3": {"threshold": 0, "precision": 0.3},
+      "THRESHOLD_PRECISION_0_4": {"threshold": 4, "precision": 0.4},
+      "THRESHOLD_PRECISION_0_5": {"threshold": 5, "precision": 0.5},
+      "THRESHOLD_PRECISION_0_6": {"threshold": 5, "precision": 0.6},
+      "THRESHOLD_PRECISION_0_7": {"threshold": 6, "precision": 0.7},
+      "THRESHOLD_PRECISION_0_8": {"threshold": 9, "precision": 0.8},
+      "THRESHOLD_PRECISION_0_9": {"threshold": 27, "precision": 0.9},
+      "THRESHOLD_PRECISION_1_0": {"threshold": 77, "precision": 1.0}
+    }
 {{- end }}
