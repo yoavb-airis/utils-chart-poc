@@ -94,6 +94,9 @@ data:
   BUCKET_TO_NATS_MAX_FILES_PER_RUN: "50"
 
   REACT_APP_STORAGE_BUCKET: {{ .Values.global.s3_directory }}
+  REACT_APP_INITIAL_OBJECTS_LIST: "person,bags,2 wheels,private,commercial,bulletproof vest,microphone,megaphone,smoke"
+  REACT_APP_INITIAL_EVENT_TYPE_LIST: "People talking,Crying,Whistle,Crowd,Barking,Music,Shofar,Alarm,Siren,Traffic,Jackhammer,Explosion,Gunshots"
+  REACT_APP_CUSTOM_OBJECTS_LIST: "person,bags,2 wheels,private,commercial,bulletproof vest,microphone,megaphone,smoke"
 
   # --- Vars migrated from airis-webapp-config ---
 
