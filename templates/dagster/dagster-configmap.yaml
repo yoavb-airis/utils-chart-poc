@@ -93,6 +93,8 @@ data:
   MACHINE_NAME: "{{ .Values.global.s3_directory | default "imperial" }}"
   BUCKET_TO_NATS_MAX_FILES_PER_RUN: "50"
 
+  REACT_APP_STORAGE_BUCKET: {{ .Values.global.s3_directory }}
+
   # --- Vars migrated from airis-webapp-config ---
 
   # Webapp Postgres (dagster pipelines access webapp DB)
